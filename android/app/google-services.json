@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "774207487248",
+    "project_id": "lora-app-33827",
+    "storage_bucket": "lora-app-33827.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774207487248:android:8c51e675f7582ca780b995",
+        "android_client_info": {
+          "package_name": "com.example.lora_chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1Z-sRiEXeEiajTtlxeQfBaernnpcUDhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

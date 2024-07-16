@@ -4,6 +4,7 @@ import 'package:lora_chatapp/Assets/button.dart';
 import 'package:lora_chatapp/Assets/dropdown.dart';
 import 'package:lora_chatapp/Assets/font.dart';
 import 'package:lora_chatapp/Assets/textfield.dart';
+import 'package:lora_chatapp/Database/database.dart';
 import 'package:lora_chatapp/Screens/HomeScreen/homescreen.dart';
 
 class Details extends StatefulWidget {
@@ -161,11 +162,34 @@ class _DetailsState extends State<Details> {
                 ),
                 Button(
                     function: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) {
-                        return HomePage();
-                      }));
+                      var name = nameController.text;
+                      var username = usernameController.text;
+                      var gender = genderController.text;
+                      var state = stateController.text;
+                      var date = pickedDate;
+
+                      if (name.isEmpty ||
+                          username.isEmpty ||
+                          gender.isEmpty ||
+                          state.isEmpty ||
+                          date == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("One or more fields are empty")));
+                      } else {
+                        try {
+                          FirestoreDatabase()
+                              .addUser(name, username, gender, state, date);
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) {
+                            return HomePage();
+                          }));
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  "An error occured, try again after sometime...")));
+                        }
+                      }
                     },
                     text: "Register",
                     backgroundColor: Colors.black,

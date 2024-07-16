@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lora_chatapp/Assets/cards.dart';
 import 'package:lora_chatapp/Assets/font.dart';
 import 'package:lora_chatapp/Assets/selectButton.dart';
+import 'package:lora_chatapp/Screens/HomeScreen/drawer.dart';
 
 import '../../Data Structures/postStructure.dart';
 
@@ -93,6 +94,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      drawer: MyDrawer(),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 26, vertical: 5),
         child: Center(

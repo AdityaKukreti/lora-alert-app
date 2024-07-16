@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lora_chatapp/Assets/font.dart';
 import 'package:lora_chatapp/Assets/textfield.dart';
@@ -52,11 +53,28 @@ class _SignInScreenState extends State<SignInScreen> {
                 text: "Sign In",
                 textColor: Colors.white,
                 backgroundColor: Colors.black,
-                function: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return HomePage();
-                  }));
+                function: () async {
+                  var email = emailController.text;
+                  var password = passwordController.text;
+                  if (email.isEmpty || password.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("One or more fields are empty")));
+                  } else {
+                    try {
+                      UserCredential? userCredential = await FirebaseAuth
+                          .instance
+                          .signInWithEmailAndPassword(
+                              email: email, password: password);
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return HomePage();
+                      }));
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "An error occured, try again after sometime...")));
+                    }
+                  }
                 },
                 textSize: 20,
                 width: 200,
