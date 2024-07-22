@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lora_chatapp/Assets/font.dart';
-import 'package:lora_chatapp/Assets/textfield.dart';
 import 'package:lora_chatapp/Screens/HomeScreen/homescreen.dart';
 import 'package:lora_chatapp/Screens/SignUp/signup.dart';
 
-import '../../Assets/button.dart';
+import '../../Assets/Code/button.dart';
+import '../../Assets/Code/font.dart';
+import '../../Assets/Code/textfield.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -61,15 +61,15 @@ class _SignInScreenState extends State<SignInScreen> {
                         content: Text("One or more fields are empty")));
                   } else {
                     try {
-                      UserCredential? userCredential = await FirebaseAuth
-                          .instance
-                          .signInWithEmailAndPassword(
-                              email: email, password: password);
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email: email, password: password);
+
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) {
                         return HomePage();
                       }));
                     } catch (e) {
+                      print(e);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(
                               "An error occured, try again after sometime...")));

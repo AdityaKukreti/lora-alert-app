@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lora_chatapp/Assets/button.dart';
-import 'package:lora_chatapp/Assets/dropdown.dart';
-import 'package:lora_chatapp/Assets/font.dart';
-import 'package:lora_chatapp/Assets/textfield.dart';
+import 'package:lora_chatapp/Assets/Code/button.dart';
 import 'package:lora_chatapp/Database/database.dart';
 import 'package:lora_chatapp/Screens/HomeScreen/homescreen.dart';
+
+import '../../Assets/Code/dropdown.dart';
+import '../../Assets/Code/font.dart';
+import '../../Assets/Code/textfield.dart';
+import '../../Database/hiveDatabase.dart';
 
 class Details extends StatefulWidget {
   const Details({super.key});
@@ -161,7 +163,7 @@ class _DetailsState extends State<Details> {
                   height: 60,
                 ),
                 Button(
-                    function: () {
+                    function: () async {
                       var name = nameController.text;
                       var username = usernameController.text;
                       var gender = genderController.text;
@@ -177,8 +179,10 @@ class _DetailsState extends State<Details> {
                             content: Text("One or more fields are empty")));
                       } else {
                         try {
-                          FirestoreDatabase()
+                          await FirestoreDatabase()
                               .addUser(name, username, gender, state, date);
+                          db.userid = username;
+                          db.updateDataBase();
                           Navigator.pop(context);
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) {

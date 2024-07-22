@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lora_chatapp/Helper%20Function/timeformatter.dart';
 
-import '../Data Structures/postStructure.dart';
-import '../Screens/Post/post.dart';
+import '../../Screens/Post/post.dart';
 import 'font.dart';
 
 class MyCard extends StatefulWidget {
@@ -13,14 +14,16 @@ class MyCard extends StatefulWidget {
       required this.post,
       required this.title,
       required this.commentCount,
-      required this.comments});
+      required this.comments,
+      required this.docId});
+  final String docId;
   final String fullname;
   final String username;
   final String title;
-  final String time;
+  final Timestamp time;
   final String post;
   final int commentCount;
-  final List<CommentStructure> comments;
+  final List<dynamic> comments;
 
   @override
   State<MyCard> createState() => _MyCardState();
@@ -48,6 +51,7 @@ class _MyCardState extends State<MyCard> {
               post: widget.post,
               title: widget.title,
               comments: widget.comments,
+              docId: widget.docId,
             );
           }));
         },
@@ -78,7 +82,7 @@ class _MyCardState extends State<MyCard> {
                   width: 5,
                 ),
                 MyFont(
-                    text: widget.time,
+                    text: formatTimestamp(widget.time),
                     size: 13,
                     weight: FontWeight.w500,
                     color: Colors.black54),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lora_chatapp/Assets/font.dart';
+
+import 'font.dart';
 
 class Button extends StatefulWidget {
   const Button(

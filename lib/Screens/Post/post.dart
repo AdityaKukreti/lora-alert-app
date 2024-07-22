@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lora_chatapp/Assets/comment.dart';
-import 'package:lora_chatapp/Assets/font.dart';
+import 'package:lora_chatapp/Assets/Code/comment.dart';
+import 'package:lora_chatapp/Database/database.dart';
 
-import '../../Data Structures/postStructure.dart';
+import '../../Assets/Code/font.dart';
+import '../../Database/hiveDatabase.dart';
+import '../../Helper Function/timeformatter.dart';
 
 class Post extends StatefulWidget {
   const Post(
@@ -13,13 +16,15 @@ class Post extends StatefulWidget {
       required this.time,
       required this.post,
       required this.title,
-      required this.comments});
+      required this.comments,
+      required this.docId});
+  final String docId;
   final String fullname;
   final String username;
   final String title;
-  final String time;
+  final Timestamp time;
   final String post;
-  final List<CommentStructure> comments;
+  final List<dynamic> comments;
 
   @override
   State<Post> createState() => _PostState();
@@ -27,8 +32,10 @@ class Post extends StatefulWidget {
 
 class _PostState extends State<Post> {
   TextEditingController commentController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    print(widget.docId);
     return Scaffold(
       appBar: AppBar(
         title: MyFont(
@@ -76,7 +83,7 @@ class _PostState extends State<Post> {
                     width: 5,
                   ),
                   MyFont(
-                      text: widget.time,
+                      text: formatTimestamp(widget.time),
                       size: 13,
                       weight: FontWeight.w500,
                       color: Colors.black54),
@@ -129,6 +136,7 @@ class _PostState extends State<Post> {
                   children: [
                     Icon(CupertinoIcons.pen),
                     TextField(
+                      controller: commentController,
                       minLines: 1,
                       maxLines: 3,
                       // maxLength: 150,
@@ -140,7 +148,46 @@ class _PostState extends State<Post> {
                               BoxConstraints(minWidth: 189, maxWidth: 189)),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (commentController.text.isNotEmpty) {
+                          FirebaseFirestore.instance
+                              .runTransaction((transaction) async {
+                            DocumentReference commentRef = FirebaseFirestore
+                                .instance
+                                .collection('posts')
+                                .doc(widget.docId)
+                                .collection("comments")
+                                .doc();
+
+                            DocumentReference postRef = FirebaseFirestore
+                                .instance
+                                .collection('posts')
+                                .doc(widget.docId);
+
+                            DocumentSnapshot postSnapshot =
+                                await transaction.get(postRef);
+                            int newCommentCount =
+                                postSnapshot.get('commentCount') + 1;
+
+                            transaction.set(commentRef, {
+                              "comment": commentController.text,
+                              "time": Timestamp.now(),
+                              "userid": db.userid
+                            });
+
+                            transaction.update(
+                                postRef, {"commentCount": newCommentCount});
+                          }).then((result) {
+                            commentController.clear();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Comment posted")));
+                          }).catchError((error) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content:
+                                    Text("Failed to post comment: $error")));
+                          });
+                        }
+                      },
                       style: ButtonStyle(
                           backgroundColor:
                               WidgetStateProperty.all(Colors.black)),
@@ -157,24 +204,35 @@ class _PostState extends State<Post> {
               SizedBox(
                 height: 40,
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: widget.comments.length,
-                  itemBuilder: (context, index) {
-                    return Comment(
-                        username: widget.comments[index].userid,
-                        comment: widget.comments[index].comment,
-                        time: "${widget.comments[index].time.hour}:" +
-                            (widget.comments[index].time.minute
-                                        .toString()
-                                        .length <
-                                    2
-                                ? "00"
-                                : widget.comments[index].time.minute
-                                    .toString()));
-                  },
-                ),
-              ),
+              StreamBuilder(
+                  stream: FirestoreDatabase().getCommentStream(widget.docId),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(25),
+                          child:
+                              Text("No comments, be the first one to comment!"),
+                        ),
+                      );
+                    }
+
+                    var posts = snapshot.data!.docs;
+                    return Expanded(
+                        child: ListView.builder(
+                      itemCount: posts.length,
+                      itemBuilder: (context, index) {
+                        return Comment(
+                            username: posts[index]['userid'],
+                            comment: posts[index]['comment'],
+                            time: formatTimestamp(posts[index]['time']));
+                      },
+                    ));
+                  }),
             ],
           ),
         ),

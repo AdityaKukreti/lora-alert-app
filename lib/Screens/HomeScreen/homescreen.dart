@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lora_chatapp/Assets/cards.dart';
-import 'package:lora_chatapp/Assets/font.dart';
-import 'package:lora_chatapp/Assets/selectButton.dart';
+import 'package:lora_chatapp/Assets/Code/cards.dart';
+import 'package:lora_chatapp/Assets/Code/font.dart';
+import 'package:lora_chatapp/Assets/Code/selectButton.dart';
 import 'package:lora_chatapp/Screens/HomeScreen/drawer.dart';
 
-import '../../Data Structures/postStructure.dart';
+import '../../Database/database.dart';
+import '../../Database/hiveDatabase.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -75,6 +78,34 @@ class _HomePageState extends State<HomePage> {
 
   var state = "All";
   var type = "All";
+  final FirestoreDatabase database = FirestoreDatabase();
+
+  Future<String> getUserId() async {
+    var email = FirebaseAuth.instance.currentUser?.email;
+    var users = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    for (var doc in users.docs) {
+      userdb.userData = doc.data();
+    }
+
+    return userdb.userData['userid'];
+  }
+
+  Future<void> loadUserid() async {
+    db.userid = await getUserId();
+    db.updateDataBase();
+  }
+
+  @override
+  void initState() {
+    db.loadData();
+    loadUserid();
+
+    super.initState();
+  }
 
   String formatTime(DateTime time) {
     return "${time.hour}:${time.minute.toString().padLeft(2, '0')}";
@@ -313,38 +344,78 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: posts.length,
-                  itemBuilder: (context, index) {
-                    bool showPost = false;
+              StreamBuilder(
+                stream: database.getPostStream(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
 
-                    if (selected[0] || (state == "All" && type == "All")) {
-                      showPost = true;
-                    } else if (state == "All" && type == posts[index].type) {
-                      showPost = true;
-                    } else if (type == "All" && state == posts[index].state) {
-                      showPost = true;
-                    } else if (state == posts[index].state &&
-                        type == posts[index].type) {
-                      showPost = true;
-                    }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(25),
+                        child: Text("No posts... Post something!"),
+                      ),
+                    );
+                  }
 
-                    if (showPost) {
-                      return MyCard(
-                        fullname: posts[index].username,
-                        username: posts[index].userid,
-                        title: posts[index].title,
-                        time: formatTime(posts[index].time),
-                        post: posts[index].content,
-                        commentCount: posts[index].commentCount,
-                        comments: posts[index].comments,
-                      );
-                    } else {
-                      return SizedBox.shrink();
-                    }
-                  },
-                ),
+                  var posts = snapshot.data!.docs;
+                  var filteredPosts = posts.where((post) {
+                    var postState = post["state"] ?? "Unknown";
+                    var postType = post["type"] ?? "Unknown";
+
+                    bool matchesState = (state == "All" || postState == state);
+                    bool matchesType = (type == "All" || postType == type);
+
+                    return matchesState && matchesType;
+                  }).toList();
+
+                  if (filteredPosts.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(25),
+                        child: Text("No matching posts found."),
+                      ),
+                    );
+                  }
+
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: filteredPosts.length,
+                      itemBuilder: (context, index) {
+                        var post = filteredPosts[index];
+                        print(post.id);
+
+                        return FutureBuilder<QuerySnapshot>(
+                          future: post.reference
+                              .collection("comments")
+                              .get(), // Fetch comments
+                          builder: (context, commentSnapshot) {
+                            if (commentSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+
+                            var comments = commentSnapshot.data?.docs ?? [];
+
+                            return MyCard(
+                              docId: post.id,
+                              fullname: post["username"],
+                              username: post["userid"],
+                              title: post["title"],
+                              time: post[
+                                  "time"], // Ensure this is correctly formatted elsewhere
+                              post: post["content"],
+                              commentCount: post["commentCount"],
+                              comments: comments, // Pass comments to the card
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
             ],
           ),

@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lora_chatapp/Assets/font.dart';
-import 'package:lora_chatapp/Assets/textfield.dart';
+import 'package:lora_chatapp/Assets/Code/font.dart';
 import 'package:lora_chatapp/Screens/SignUp/details.dart';
 
-import '../../Assets/button.dart';
+import '../../Assets/Code/button.dart';
+import '../../Assets/Code/textfield.dart';
 import '../Signin/signin.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -77,11 +77,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           .instance
                           .createUserWithEmailAndPassword(
                               email: email, password: pass1);
+
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return Details();
                       }));
                     } on FirebaseAuthException catch (e) {
+                      print(e);
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text(
                               "An error occured. Please try again after sometime...")));

@@ -60,3 +60,36 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
     );
   }
 }
+
+class DisabledTextfield extends StatefulWidget {
+  const DisabledTextfield(
+      {super.key,
+      required this.text,
+      required this.icon,
+      required this.controller});
+  final String text;
+  final IconData icon;
+  final TextEditingController controller;
+
+  @override
+  State<DisabledTextfield> createState() => _DisabledTextfieldState();
+}
+
+class _DisabledTextfieldState extends State<DisabledTextfield> {
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      style: TextStyle(color: Colors.black),
+      controller: widget.controller,
+      enabled: false,
+      decoration: InputDecoration(
+          disabledBorder:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+          labelText: widget.text,
+          labelStyle: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.w400, fontSize: 18),
+          prefixIcon: Icon(widget.icon)),
+    );
+  }
+}

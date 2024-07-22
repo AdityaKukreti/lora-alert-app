@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lora_chatapp/Assets/Code/font.dart';
+import 'package:lora_chatapp/Screens/Account%20Details/accountDetails.dart';
 
 import '../Signin/signin.dart';
 
@@ -27,6 +29,27 @@ class MyDrawer extends StatelessWidget {
                         letterSpacing: 2),
                   ),
                 )),
+            ListTile(
+              title: Row(
+                children: [
+                  Icon(Icons.person),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  MyFont(
+                    text: "Account Details",
+                    size: 20,
+                    weight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AccountDetails();
+                }));
+              },
+            ),
             ListTile(
               title: const Row(
                 children: [

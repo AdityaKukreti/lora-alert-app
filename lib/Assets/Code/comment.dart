@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lora_chatapp/Assets/font.dart';
+
+import 'font.dart';
 
 class Comment extends StatefulWidget {
   const Comment(
