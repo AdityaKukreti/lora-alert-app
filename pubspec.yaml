@@ -41,6 +41,9 @@ dependencies:
   intl:
   hive:
   hive_flutter:
+  geolocator:
+  chat_bubbles:
+  dio:
 
 dev_dependencies:
   flutter_test:

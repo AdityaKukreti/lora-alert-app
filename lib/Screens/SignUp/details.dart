@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lora_chatapp/Assets/Code/button.dart';
 import 'package:lora_chatapp/Database/database.dart';
-import 'package:lora_chatapp/Screens/HomeScreen/homescreen.dart';
 
 import '../../Assets/Code/dropdown.dart';
 import '../../Assets/Code/font.dart';
 import '../../Assets/Code/textfield.dart';
 import '../../Database/hiveDatabase.dart';
+import '../HomePage/homepage.dart';
 
 class Details extends StatefulWidget {
   const Details({super.key});

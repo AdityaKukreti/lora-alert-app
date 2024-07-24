@@ -24,6 +24,20 @@ class FirestoreDatabase {
     });
   }
 
+  Future<void> addPost(
+      String state, String disaster, String title, String post) {
+    return posts.add({
+      'username': userdb.userData['name'],
+      'userid': userdb.userData['userid'],
+      'state': state,
+      'time': Timestamp.now(),
+      'commentCount': 0,
+      'content': post,
+      'title': title,
+      'type': disaster
+    });
+  }
+
   Stream<QuerySnapshot> getPostStream() {
     final postStream = FirebaseFirestore.instance
         .collection('posts')

@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lora_chatapp/Screens/HomeScreen/homescreen.dart';
 import 'package:lora_chatapp/Screens/SignUp/signup.dart';
 
 import '../../Assets/Code/button.dart';
 import '../../Assets/Code/font.dart';
 import '../../Assets/Code/textfield.dart';
+import '../HomePage/homepage.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

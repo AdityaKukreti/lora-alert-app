@@ -28,66 +28,71 @@ class _AccountDetailsState extends State<AccountDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: MyFont(
-          text: "A C C O U N T   D E T A I L S",
-          color: Colors.black,
-          weight: FontWeight.w600,
-          size: 20,
-        ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Center(
-          child: Column(
-            children: [
-              CircleAvatar(
-                child: Image.asset(
-                  "lib/Assets/Images/profile-picture.png",
-                ),
-                radius: 50,
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Center(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: MyFont(
+                  text: "A C C O U N T   D E T A I L S",
+                  size: 22,
+                  weight: FontWeight.w700,
+                  color: Colors.black),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            CircleAvatar(
+              child: Image.asset(
+                "lib/Assets/Images/profile-picture.png",
               ),
-              MyFont(
-                  text: "@${userdb.userData['userid']}",
-                  size: 16,
-                  weight: FontWeight.w600,
-                  color: Colors.black45),
-              MyFont(
-                  text: "${userdb.userData['name']}",
-                  size: 18,
-                  weight: FontWeight.w600,
-                  color: Colors.black87),
-              SizedBox(
-                height: 40,
-              ),
-              DisabledTextfield(
-                  controller: emailController,
-                  text: 'Email',
-                  icon: Icons.email),
-              SizedBox(
-                height: 20,
-              ),
-              DisabledTextfield(
-                  controller: genderController,
-                  text: 'Gender',
-                  icon: Icons.people),
-              SizedBox(
-                height: 20,
-              ),
-              DisabledTextfield(
-                  controller: stateController,
-                  text: 'State',
-                  icon: Icons.location_on),
-              SizedBox(
-                height: 20,
-              ),
-              DisabledTextfield(
-                  controller: dobController,
-                  text: 'DOB',
-                  icon: Icons.calendar_month),
-            ],
-          ),
+              radius: 50,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            MyFont(
+                text: "@${userdb.userData['userid']}",
+                size: 16,
+                weight: FontWeight.w600,
+                color: Colors.black45),
+            MyFont(
+                text: "${userdb.userData['name']}",
+                size: 18,
+                weight: FontWeight.w600,
+                color: Colors.black87),
+            SizedBox(
+              height: 40,
+            ),
+            DisabledTextfield(
+                controller: emailController, text: 'Email', icon: Icons.email),
+            SizedBox(
+              height: 20,
+            ),
+            DisabledTextfield(
+                controller: genderController,
+                text: 'Gender',
+                icon: Icons.people),
+            SizedBox(
+              height: 20,
+            ),
+            DisabledTextfield(
+                controller: stateController,
+                text: 'State',
+                icon: Icons.location_on),
+            SizedBox(
+              height: 20,
+            ),
+            DisabledTextfield(
+                controller: dobController,
+                text: 'DOB',
+                icon: Icons.calendar_month),
+          ],
         ),
       ),
     );
