@@ -3,8 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:lora_chatapp/Assets/Code/chatTemplate.dart';
 import 'package:lora_chatapp/Assets/Code/font.dart';
 import 'package:lora_chatapp/Database/database.dart';
+import 'package:lora_chatapp/Screens/Arduino%20Chat%20Page/bluetooth_list_devices.dart';
+
+import '../../Database/hiveDatabase.dart';
+import '../../Helper Function/getLocation.dart';
 
 Future<Position?> getCurrentLocation() async {
   bool serviceEnabled;
@@ -45,8 +50,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String longitude = "";
-  String latitude = "";
   String errorMessage = "";
 
   @override
@@ -88,13 +91,13 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               MyFont(
-                  text: "H O M E P A G E",
+                  text: "D A S H B O A R D",
                   size: 25,
                   weight: FontWeight.w600,
                   color: Colors.black),
@@ -160,119 +163,11 @@ class _HomePageState extends State<HomePage> {
               ),
               MaterialButton(
                 onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return Dialog(
-                          child: Container(
-                            height: 420,
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(CupertinoIcons
-                                        .exclamationmark_triangle_fill),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    MyFont(
-                                        text: "A L E R T",
-                                        size: 20,
-                                        weight: FontWeight.w500,
-                                        color: Colors.black),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                MyFont(
-                                    text:
-                                        "This will send a SOS signal and your user information to all the nearby organizations which will include:",
-                                    size: 16,
-                                    weight: FontWeight.w400,
-                                    color: Colors.black),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                MyFont(
-                                    text: "1. Your name",
-                                    size: 16,
-                                    weight: FontWeight.w500,
-                                    color: Colors.black),
-                                MyFont(
-                                    text: "2. Your age",
-                                    size: 16,
-                                    weight: FontWeight.w500,
-                                    color: Colors.black),
-                                MyFont(
-                                    text: "3. Your contact",
-                                    size: 16,
-                                    weight: FontWeight.w500,
-                                    color: Colors.black),
-                                MyFont(
-                                    text: "4. Your current location",
-                                    size: 16,
-                                    weight: FontWeight.w500,
-                                    color: Colors.black),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                MyFont(
-                                    text: "Are you sure you want to continue?",
-                                    size: 17,
-                                    weight: FontWeight.w500,
-                                    color: Colors.black),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    MaterialButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text("Cancel"),
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          side: BorderSide()),
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    MaterialButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    "SOS sent successfully")));
-                                      },
-                                      child: Text(
-                                        "Ok",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          side: BorderSide()),
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BluetoothDeviceListPage()),
+                  );
                 },
                 child: Row(
                   children: [
@@ -285,8 +180,8 @@ class _HomePageState extends State<HomePage> {
                       width: 20,
                     ),
                     MyFont(
-                        text: "S E N D   S O S",
-                        size: 30,
+                        text: "E M E R G E N C Y",
+                        size: 25,
                         weight: FontWeight.w900,
                         color: Colors.white)
                   ],
@@ -311,37 +206,48 @@ class _HomePageState extends State<HomePage> {
               SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black12,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            child: Image.asset(
-                              "lib/Assets/Images/TamilNadu_Logo.svg.png",
-                            ),
-                            radius: 35,
-                            backgroundColor: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: Text(
-                              "State Disaster Management Authority",
-                              style: TextStyle(
-                                fontSize: 15.5,
-                                fontWeight: FontWeight.w500,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return ChatTemplate(
+                              path: "lib/Assets/Images/TamilNadu_Logo.svg.png",
+                              title: "State Disaster Management Authority",
+                              chat: db.chatMessagesSDMA);
+                        }));
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              child: Image.asset(
+                                "lib/Assets/Images/TamilNadu_Logo.svg.png",
                               ),
-                              overflow: TextOverflow.visible,
+                              radius: 35,
+                              backgroundColor: Colors.white,
                             ),
-                          ),
-                        ],
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Text(
+                                "State Disaster Management Authority",
+                                style: TextStyle(
+                                  fontSize: 15.5,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.visible,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(

@@ -148,17 +148,144 @@ class _LocalNewsState extends State<LocalNews> {
                 ),
                 backgroundColor: Colors.black,
               )
-            : null,
+            : _currentIndex == 0
+                ? FloatingActionButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              child: Container(
+                                height: 420,
+                                padding: EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(CupertinoIcons
+                                            .exclamationmark_triangle_fill),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        MyFont(
+                                            text: "A L E R T",
+                                            size: 20,
+                                            weight: FontWeight.w500,
+                                            color: Colors.black),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    MyFont(
+                                        text:
+                                            "This will send a SOS signal and your user information to all the nearby organizations which will include:",
+                                        size: 16,
+                                        weight: FontWeight.w400,
+                                        color: Colors.black),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    MyFont(
+                                        text: "1. Your name",
+                                        size: 16,
+                                        weight: FontWeight.w500,
+                                        color: Colors.black),
+                                    MyFont(
+                                        text: "2. Your age",
+                                        size: 16,
+                                        weight: FontWeight.w500,
+                                        color: Colors.black),
+                                    MyFont(
+                                        text: "3. Your contact",
+                                        size: 16,
+                                        weight: FontWeight.w500,
+                                        color: Colors.black),
+                                    MyFont(
+                                        text: "4. Your current location",
+                                        size: 16,
+                                        weight: FontWeight.w500,
+                                        color: Colors.black),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    MyFont(
+                                        text:
+                                            "Are you sure you want to continue?",
+                                        size: 17,
+                                        weight: FontWeight.w500,
+                                        color: Colors.black),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        MaterialButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Cancel"),
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              side: BorderSide()),
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        MaterialButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "SOS sent successfully")));
+                                          },
+                                          child: Text(
+                                            "Ok",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              side: BorderSide()),
+                                          color: Colors.black,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                    shape: CircleBorder(),
+                    child: Icon(
+                      Icons.sos,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.black,
+                  )
+                : null,
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           unselectedItemColor: Colors.grey,
           selectedItemColor: Colors.black,
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(icon: Icon(Icons.newspaper), label: "News"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.crisis_alert_rounded), label: "Alerts"),
-            BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.globe), label: "AI Help"),
+                icon: Icon(CupertinoIcons.globe), label: "Pluto"),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
           ],
           onTap: onBottomNavBarTapped,
@@ -189,7 +316,7 @@ class _LocalNewsState extends State<LocalNews> {
             Align(
               alignment: Alignment.bottomLeft,
               child: MyFont(
-                  text: "A L E R T S",
+                  text: "N E W S",
                   size: 27.5,
                   weight: FontWeight.w600,
                   color: Colors.black),

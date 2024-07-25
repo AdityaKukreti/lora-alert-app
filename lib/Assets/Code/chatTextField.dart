@@ -5,9 +5,11 @@ class Chattextfield extends StatefulWidget {
       {super.key,
       required this.controller,
       required this.onSend,
-      required this.ai});
+      required this.ai,
+      required this.onLocation});
   final TextEditingController controller;
   final VoidCallback onSend;
+  final VoidCallback onLocation;
   final bool ai;
 
   @override
@@ -40,7 +42,7 @@ class _ChattextfieldState extends State<Chattextfield> {
               hintText: "Message...",
               constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width *
-                      (widget.controller.text.isEmpty ? 0.65 : 0.7)),
+                      (widget.controller.text.isEmpty ? 0.6 : 0.65)),
               border: OutlineInputBorder(borderSide: BorderSide.none),
               // contentPadding:
               //     EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
@@ -50,7 +52,9 @@ class _ChattextfieldState extends State<Chattextfield> {
           ),
           widget.ai == false
               ? widget.controller.text.isEmpty
-                  ? IconButton(onPressed: () {}, icon: Icon(Icons.location_on))
+                  ? IconButton(
+                      onPressed: widget.onLocation,
+                      icon: Icon(Icons.location_on))
                   : SizedBox()
               : SizedBox(),
           IconButton(onPressed: widget.onSend, icon: Icon(Icons.send)),

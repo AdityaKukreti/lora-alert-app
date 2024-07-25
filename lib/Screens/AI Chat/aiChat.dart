@@ -38,11 +38,26 @@ class _AIChatState extends State<AIChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: MyFont(
-          text: "AI Chat",
-          size: 25,
-          weight: FontWeight.w500,
-          color: Colors.black,
+        title: Row(
+          children: [
+            SizedBox(
+              width: 10,
+            ),
+            CircleAvatar(
+              child: Image.asset("lib/Assets/Images/5821280.png"),
+              backgroundColor: Colors.white,
+              radius: 18,
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            MyFont(
+              text: "P L U T O",
+              size: 25,
+              weight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ],
         ),
       ),
       body: Column(
@@ -92,7 +107,7 @@ class _AIChatState extends State<AIChat> {
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
-                          fontSize: 16),
+                          fontSize: 15),
                     ));
                   } else if (line.startsWith('<sb>')) {
                     line = line.replaceAll('<sb>', "");
@@ -102,7 +117,7 @@ class _AIChatState extends State<AIChat> {
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
-                          fontSize: 15.5),
+                          fontSize: 14.5),
                     ));
                   } else if (line.startsWith('<i>')) {
                     line = line.replaceAll('<i>', "");
@@ -112,7 +127,7 @@ class _AIChatState extends State<AIChat> {
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w400,
-                          fontSize: 15),
+                          fontSize: 14),
                     ));
                   }
                 }
@@ -120,6 +135,7 @@ class _AIChatState extends State<AIChat> {
                   db.chatMessages.add(customBubble(l));
                 });
               },
+              onLocation: () {},
               ai: true,
             ),
           ),
